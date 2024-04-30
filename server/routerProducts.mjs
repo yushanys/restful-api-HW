@@ -9,10 +9,10 @@ import { JSONFile } from "lowdb/node";
 const defaultData = { products: [] };
 const db = new Low(new JSONFile("./db.json"), defaultData);
 await db.read();
+
 dotenv.config();
 const secretKey = process.env.SECRET_KEY_LOGIN;
 const upload = multer();
-const products = db.data.products;
 
 const whiteList = ["http://localhost:5500", "http://127.0.0.1:5500"];
 const corsOptions = {
@@ -32,19 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/api/products", (req, res) => {
-  if (products && products.length > 0) {
-    res.status(200).json(
-      products.map((v) => ({
-        id: v.id,
-        title: v.title,
-        price: v.price,
-        stock: v.stock,
-        createTime: v.createTime,
-      }))
-    );
-  } else {
-    res.status(401).json({ error: "Unauthorized access" });
-  }
+  res.status(200).json({ message: "得到所有產品" });
 });
 
 app.post("/api/products", upload.none(), (req, res) => {
@@ -71,6 +59,6 @@ app.get("/api/products/search", (req, res) => {
   res.status(200).json({ message: `使用 ID 作為搜尋條件來搜尋產品 ${id}` });
 });
 
-app.listen(5500, () => {
-  console.log("running at http://localhost:5500");
+app.listen(3000, () => {
+  console.log("running at http://localhost:3000");
 });
